@@ -96,7 +96,7 @@ proc_subst() {
 (proc_subst)
 
 strings() {
-    a='PRETTY_NAME="Ubuntu 22.04.2 LTS"'
+    local -r a='PRETTY_NAME="Ubuntu 22.04.2 LTS"'
     # Indexing
     echo "${b:-nostring}"
     echo "$a"
@@ -116,6 +116,9 @@ strings() {
     echo 'Regex exercises'
     echo "$(expr "$a" : '\(PRETTY\)' ) "
     echo "$(expr "$a" : '\(.*LTS.*\)' ) "
+    local -r num='   123'
+    [[ $num =~ ^([[:space:]]*)([[:print:]]*)$ ]]
+    echo "printable portion reads ${BASH_REMATCH[2]}"
 }
 (strings)
 
