@@ -1,0 +1,4 @@
+#!/usr/bin/env bpftrace
+tracepoint:syscalls:sys_enter_execve {
+    printf("pid: %d, comm: %s, file: %s, ustack: %s\n", pid, comm, str(args->filename), ustack());
+}

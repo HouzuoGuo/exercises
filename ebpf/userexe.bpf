@@ -1,0 +1,9 @@
+#!/usr/bin/env bpftrace
+
+uprobe:/home/howard/git/exercises/ebpf/a.out:0x1169 {
+    printf("%d: called %s (%s, %d), stack %s\n", pid, usym(reg("ip")), str(arg0), arg1, ustack());
+}
+
+uretprobe:/home/howard/git/exercises/ebpf/a.out:0x1169 {
+    printf("%d: returning from uretprobe to %s, stack %s, retvalue %d \n", pid, usym(reg("ip")), ustack(), retval);
+}
