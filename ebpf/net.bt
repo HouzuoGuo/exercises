@@ -1,0 +1,32 @@
+#!/usr/bin/env -S bpftrace -f json
+
+tracepoint:syscalls:sys_enter_read /pid == 1/ {
+    @fd[tid] = args->fd;
+}
+tracepoint:syscalls:sys_exit_read /pid == 1 && @fd[tid]/ {
+    if (args->ret > 0) {
+       @read_fd[@fd[tid]] += args->ret;
+    }
+    delete(@fd[tid]);
+}
+tracepoint:syscalls:sys_enter_write /pid == 1/ {
+    @fd[tid] = args->fd;
+}
+tracepoint:syscalls:sys_exit_write /pid == 1 && @fd[tid]/ {
+    if (args->ret > 0) {
+        @write_fd[@fd[tid]] += args->ret;
+    }
+    delete(@fd[tid]);
+}
+
+tracepoint:tcp:tcp_probe {
+    @tcp_src[args->saddr, args->sport] += args->data_len;
+    @tcp_dest[args->daddr, args->dport] += args->data_len;
+}
+
+interval:s:1 {
+    print(@write_fd);
+    print(@read_fd);
+	print(@tcp_src);
+	print(@tcp_dest);
+}

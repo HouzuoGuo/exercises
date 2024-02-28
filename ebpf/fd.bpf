@@ -1,0 +1,9 @@
+#!/usr/bin/env bpftrace
+
+tracepoint:syscalls:sys_enter_write /pid == 1137/ {
+    @write_fd[args->fd] += args->count;
+}
+
+tracepoint:syscalls:sys_enter_read /pid == 1137/ {
+    @read_fd[args->fd] += args->count;
+}

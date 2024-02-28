@@ -5,13 +5,3 @@ kretprobe:vfs_read {
     @vfs_by_pid[pid] += retval;
     @vfs_by_size = hist(retval);
 }
-
-tracepoint:skb:kfree_skb {
-    @drop_prot[args->protocol]++;
-    @drop_reason[args->reason]++;
-}
-
-tracepoint:tcp:tcp_probe {
-    @tcp_dport[args->dport]++;
-    @tcp_sport[args->sport]++;
-}
